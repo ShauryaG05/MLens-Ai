@@ -1,4 +1,4 @@
-# ChatBot
+# MLensAI
 
 A lightweight, document-grounded chatbot built with LangChain, Hugging Face embeddings, ChromaDB, and Google Gemini. The project reads a PDF document, splits it into searchable chunks, stores embeddings in a persistent vector database, and answers user questions using only the information available in the provided document.
 
