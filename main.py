@@ -19,7 +19,7 @@ embedding_model = HuggingFaceEmbeddings(
 )
 
 vectorstore = Chroma(
-    persist_directory="chromaDb",
+    persist_directory="./chromaDb",
     embedding_function=embedding_model
 )
 
