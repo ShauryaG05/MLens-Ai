@@ -3,18 +3,16 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-import os
-from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
-
+PROJECT_DIR = Path(__file__).resolve().parent
 
 embeddings = HuggingFaceEmbeddings(
     model_name = "sentence-transformers/all-MiniLM-L6-v2"
 )
 
 print("Document Loaded")
-loader = PyPDFLoader("./Docs.pdf")
+loader = PyPDFLoader(str(PROJECT_DIR / "Docs.pdf"))
 
 doc = loader.load()
 
@@ -32,7 +30,7 @@ vector_store = Chroma.from_documents(
     documents = texts,
     collection_name="pdf_collection",
     embedding=embeddings,
-    persist_directory="/Users/shaurya/Desktop/Directory/Root/ChatBot/"
+    persist_directory=str(PROJECT_DIR)
 
 )
 

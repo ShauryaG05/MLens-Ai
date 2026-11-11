@@ -43,8 +43,8 @@ ChatBot/
 ├── Data_processing.py        # Loads PDF, embeds text, and stores it in ChromaDB
 ├── main.py                   # Chat interface and Q&A loop
 ├── Docs.pdf                  # Source PDF used as the knowledge base
-├── chromaDb/                 # Persistent vector database files
-├── chroma.sqlite3            # SQLite database used by Chroma
+├── chroma.sqlite3            # Persistent Chroma database (pdf_collection)
+├── chromaDb/                 # Old, unused vector store
 ├── .env                      # Local environment variables (not committed)
 ├── .gitignore                # Excludes local environment files
 └── README.md                 # Project documentation
@@ -53,7 +53,7 @@ ChatBot/
 ## How It Works
 
 ### 1. Data ingestion
-`Data_processing.py` loads `Docs.pdf` using `PyPDFLoader`, splits the text using `RecursiveCharacterTextSplitter`, and stores the split documents into a persistent Chroma vector store.
+`Data_processing.py` loads `Docs.pdf` using `PyPDFLoader`, splits the text using `RecursiveCharacterTextSplitter`, and stores the split documents in the `pdf_collection` collection in the project-root `chroma.sqlite3` database. `main.py` reads from this same database and collection.
 
 ### 2. Retrieval
 `main.py` loads the vector store and creates a retriever with MMR search:
@@ -169,7 +169,7 @@ Ensure `GOOGLE_API_KEY` is configured correctly in `.env` and the model package 
 Check that your virtual environment contains the required LangChain and embedding libraries.
 
 ### Persistent database path issues
-The ingestion script stores data in a configured persistent directory. If you move the project or run it from a different machine path, verify that the `persist_directory` matches the project layout.
+Both scripts resolve the database path from their own file location, so they can be run from any working directory. Do not point one script at the old `chromaDb/` folder while the other uses the project-root database.
 
 ## Future Improvements
 

@@ -2,12 +2,12 @@ from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma                
-import os
+from langchain_chroma import Chroma
+from pathlib import Path
 
 load_dotenv()
 
-api_key = os.getenv("GOOGLE_API_KEY")
+PROJECT_DIR = Path(__file__).resolve().parent
 
 llm = init_chat_model(
     "google_genai:gemini-3.5-flash-lite"
@@ -19,8 +19,9 @@ embedding_model = HuggingFaceEmbeddings(
 )
 
 vectorstore = Chroma(
-    persist_directory="./chromaDb",
-    embedding_function=embedding_model
+    persist_directory=str(PROJECT_DIR),
+    embedding_function=embedding_model,
+    collection_name="pdf_collection",
 )
 
 retriever = vectorstore.as_retriever(
@@ -36,17 +37,8 @@ prompt = ChatPromptTemplate.from_messages(
     [
         ("system",""" 
         You are an intelligent Machine Learning Expert Chatbot that answers user queries strictly based on the reference documents provided to you.
+        you have to use provided information and based on it you have to frame a answer also understand greeting and greet as you do. anyone tries to leave the topic. just revert back that its not an valid result domain.
 
-Instructions
-Answer questions using only the information available in the provided reference documents.
-Do not use external sources, pretrained knowledge, assumptions, or unsupported information.
-Ensure every answer is accurate, relevant, and grounded in the retrieved context.
-If the answer is not available in the provided references, respond exactly with: "I am not able to answer this at the moment."
-Never hallucinate, fabricate information, or make unsupported assumptions.
-Use conversation history to understand follow-up questions while keeping all factual answers document-based.
-Keep responses clear, concise, and easy to understand.
-Primary Objective
-Provide reliable, accurate, and context-aware answers related to Machine Learning, strictly following the provided reference documents.
         """),
         ("human","""Context:{context} Question:{question}""")
     ]
