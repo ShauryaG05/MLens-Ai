@@ -6,7 +6,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parent
-
+VECTOR_DB_DIR = PROJECT_DIR / "chroma_index"
 embeddings = HuggingFaceEmbeddings(
     model_name = "sentence-transformers/all-MiniLM-L6-v2"
 )
@@ -30,7 +30,7 @@ vector_store = Chroma.from_documents(
     documents = texts,
     collection_name="pdf_collection",
     embedding=embeddings,
-    persist_directory=str(PROJECT_DIR)
+    persist_directory=str(VECTOR_DB_DIR)
 
 )
 

@@ -8,7 +8,7 @@ from pathlib import Path
 load_dotenv()
 
 PROJECT_DIR = Path(__file__).resolve().parent
-
+VECTOR_DB_DIR = PROJECT_DIR / "chroma_index"
 llm = init_chat_model(
     "google_genai:gemini-3.5-flash-lite"
     )
@@ -19,7 +19,7 @@ embedding_model = HuggingFaceEmbeddings(
 )
 
 vectorstore = Chroma(
-    persist_directory=str(PROJECT_DIR),
+    persist_directory=str(VECTOR_DB_DIR),
     embedding_function=embedding_model,
     collection_name="pdf_collection",
 )
